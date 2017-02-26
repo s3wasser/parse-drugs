@@ -14,6 +14,7 @@ soup = BeautifulSoup(druglst_html, 'html.parser')
 
 # loop through first page of each letter in alphabet (a1, b1, ... , z1)
 for link in soup.select(".alpha-list a"):
+	print link.get('href')
 	# read html from first page of each letter in alphabet
 	req = urllib2.Request("https://www.drugs.com" + link.get('href'), headers=headers)
 	response = urllib2.urlopen(req)
@@ -27,10 +28,11 @@ for link in soup.select(".alpha-list a"):
 		div.decompose()
 	# find links for remaining pages for each letter (a2, a3, ... , a34)
 	for link in alphasoup.select(".paging-list-index a"):
-		req = urllib2.Request('https://www.drugs.com/drug_information.html', headers=headers)
+		req = urllib2.Request('https://www.drugs.com' + link.get('href'), headers=headers)
 		response = urllib2.urlopen(req)
 		nextalpha = response.read()
 		nextalphasoup = BeautifulSoup(nextalpha, 'html.parser')
+		print link.get('href')
 		for link in nextalphasoup.select("a.doc-type-pro"):
 			print link.get('href')
 
