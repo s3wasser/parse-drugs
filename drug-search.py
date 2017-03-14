@@ -29,7 +29,7 @@ def make_soup(link):
 	return soup
 
 # prints links corresponsing to inputted drug
-def find_drug(drug):
+def find_drug2(drug):
 	drug = drug.lower()
 	alphasoup = make_soup(alphadict[drug[0]])
 
@@ -41,6 +41,7 @@ def find_drug(drug):
 	for link in alphasoup.select(".paging-list-index a"):
 		alphalst.append("https://www.drugs.com" + link.get('href'))
 
+	druglinks = []
 	for link in alphalst:
 		moresoup = make_soup(link)
 		drugs = moresoup.select('a.doc-type')
@@ -48,5 +49,16 @@ def find_drug(drug):
 			drug <= drugs[len(drugs)-1].string.lower()):
 			for link in drugs:
 				if (drug == link.string.lower()):
-					print link
+					druglinks.append(link.get('href'))
 			break;
+
+	druglinks.sort()
+	return 'https://www.drugs.com' + druglinks[0]
+
+
+def find_drug1(drug):
+	drugsoup = make_soup('https://www.drugs.com/' + drug.lower() + '.html')
+	if (drugsoup.title == 'Page Not Found - Drugs.com'):
+		return find_drug2(drug)
+	else:
+		return 'https://www.drugs.com/' + drug.lower() + '.html'
