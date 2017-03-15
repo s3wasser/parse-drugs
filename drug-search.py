@@ -22,11 +22,15 @@ for link in soup.select(".alpha-list a"):
 
 # html request to make soup
 def make_soup(link):
-	req = urllib2.Request(link, headers=headers)
-	response = urllib2.urlopen(req)
-	html = response.read()
-	soup = BeautifulSoup(html, 'html.parser')
-	return soup
+	try:
+		req = urllib2.Request(link, headers=headers)
+		response = urllib2.urlopen(req)
+	except urllib2.HTTPError, err:
+		return -1
+	else:
+		html = response.read()
+		soup = BeautifulSoup(html, 'html.parser')
+		return soup
 
 # prints links corresponsing to inputted drug
 def find_drug2(drug):
@@ -58,7 +62,9 @@ def find_drug2(drug):
 
 def find_drug1(drug):
 	drugsoup = make_soup('https://www.drugs.com/' + drug.lower() + '.html')
-	if (drugsoup.title == 'Page Not Found - Drugs.com'):
+	if (drugsoup == -1):
 		return find_drug2(drug)
 	else:
 		return 'https://www.drugs.com/' + drug.lower() + '.html'
+
+print find_drug1("abreva")
