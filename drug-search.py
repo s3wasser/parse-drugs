@@ -55,9 +55,11 @@ def find_drug2(drug):
 				if (drug == link.string.lower()):
 					druglinks.append(link.get('href'))
 			break;
-
-	druglinks.sort()
-	return 'https://www.drugs.com' + druglinks[0]
+	if not druglinks:
+		return -1
+	else:
+		druglinks.sort()
+		return 'https://www.drugs.com' + druglinks[0]
 
 
 def find_drug1(drug):
@@ -66,5 +68,3 @@ def find_drug1(drug):
 		return find_drug2(drug)
 	else:
 		return 'https://www.drugs.com/' + drug.lower() + '.html'
-
-print find_drug1("abreva")
