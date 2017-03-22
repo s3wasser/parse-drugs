@@ -68,3 +68,29 @@ def find_drug1(drug):
 		return find_drug2(drug)
 	else:
 		return 'https://www.drugs.com/' + drug.lower() + '.html'
+
+def get_interactions(link):
+	if (link == -1):
+		return False
+	drug = make_soup(link)
+	for item in drug.select('.nav-item'):
+		if ('interactions' == item.string.lower()):
+			int_link = 'https://www.drugs.com' + item.get('href')
+	intsoup = make_soup(int_link)
+	majors = intsoup.select('.int_3 a')
+	majlnk = False
+	for item in majors:
+		if ('major' in item.string.lower()):
+			major_link = 'https://www.drugs.com/drug-interactions/' + item.get('href')
+			majlnk = True
+	if (majlnk == False):
+		return False
+	else:
+		interactsoup = make_soup(major_link)
+		if (interactsoup == -1): 
+			return False
+		interactions = []
+		for item in interactsoup.select('.int_3 a'):
+			if ('drug-interactions' in item.get('href')):
+				interactions.append(item.string)
+		return interactions
